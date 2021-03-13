@@ -1,3 +1,4 @@
+// vue/test-utils -> Nos garante a interação com nossos componentes em tempo de teste
 // @ é um atalho do webpack para a diretório 'src'
 import Lance from '@/components/Lance';
 import { mount }  from '@vue/test-utils'
@@ -16,4 +17,33 @@ test('Garantindo que o componente Lance foi realmente montado', () => {
     */
     const wrapper = mount(Lance)
     expect(wrapper).toBeTruthy()
+})
+
+test('Garantindo que o usuário não de um lance menor que zero', () => {
+    const wrapper = mount(Lance)
+    const inputLance = wrapper.find('input') // find -> Procura esse elemento html dentro do wrapper(componente Lance)
+    inputLance.setValue(-100) // setValeu -> Seta um valor dentro do input
+    const lancesEmitidos = wrapper.emitted('novo-lance') // Esperando que o evento 'novo-lance' seja emitido
+    wrapper.trigger('submit')
+    expect(lancesEmitidos).toBeUndefined()
+})
+
+test('Garantindo que seja emitido um novo lance quando o valor for maior que zero', () => {
+    const wrapper = mount(Lance)
+    const inputLance = wrapper.find('input')
+    inputLance.setValue(100)
+    wrapper.trigger('submit')
+    const lancesEmitidos = wrapper.emitted('novo-lance')
+    expect(lancesEmitidos).toHaveLength(1)
+})
+
+test('Garantindo a emissão de um valor esperado de um lance válido', () => {
+    const wrapper = mount(Lance)
+    const inputLance =wrapper.find('input')
+    inputLance.setValue(200)
+    wrapper.trigger('submit')
+    const lancesEmitidos = wrapper.emitted('novo-lance')
+    console.log(lancesEmitidos);
+    const lance = parseInt(lancesEmitidos[0][0])
+    expect(lance).toBe(200)
 })
