@@ -98,7 +98,11 @@ describe('Um lance com valor minimo', () => {
             Use imediatamente após modificar algum dado para esperar a atualização do DOM.
         */
         await wrapper.vm.$nextTick()
-        const msgError = wrapper.find('p.alert').element
-        expect(msgError).toBeTruthy()
+        // element -> pegando o elemento html dentro do componente
+        // textContent -> Pegando de fato a mensagem que tem dento do elemento html
+        const msgError = wrapper.find('p.alert').element.textContent
+        const msgExpected = 'O valor mínimo para o lance é de R$ 500'
+        // Verificando se a msgError contém a msgExpected        
+        expect(msgError).toContain(msgExpected)
     })
 })
