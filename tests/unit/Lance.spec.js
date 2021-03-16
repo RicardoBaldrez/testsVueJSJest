@@ -66,6 +66,7 @@ describe('Um lance com valor minimo', () => {
 
     test('Garantindo a emissão de um valor esperado de um lance válido', () => {
         const wrapper = mount(Lance, {
+            // Setando um valor na props -> lanceMinimo para poder testar se o valor do lance passado no input é ou não maior que o lance minimo
             propsData: {
                 lanceMinimo: 300
             }
@@ -77,5 +78,27 @@ describe('Um lance com valor minimo', () => {
         const lancesEmitidos = wrapper.emitted('novo-lance')
         const lance = parseInt(lancesEmitidos[0][0])
         expect(lance).toBe(301)
+    })
+
+    test('Garantindo que os lances com valor menor que o lance minimo não sejam válidos', async () => {
+        const wrapper = mount(Lance, {
+            propsData: {
+                lanceMinimo: 500
+            }
+        })
+
+        const input = wrapper.find('input')
+        input.setValue(200)
+        wrapper.trigger('submit')
+        /*
+            Através do await aguardamos que o dom seja atualizado pelo nextTick
+            e assim teremos o elemento da 'msgError' no nosso componente ...
+
+            Adia o callback para ser executado depois do próximo ciclo de atualização do DOM. 
+            Use imediatamente após modificar algum dado para esperar a atualização do DOM.
+        */
+        await wrapper.vm.$nextTick()
+        const msgError = wrapper.find('p.alert').element
+        expect(msgError).toBeTruthy()
     })
 })
