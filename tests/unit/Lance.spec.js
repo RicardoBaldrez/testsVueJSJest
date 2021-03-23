@@ -40,7 +40,7 @@ describe('Um lance sem valor minimo', () => {
     
     test('Garantindo a emissão de um valor esperado de um lance válido', () => {
         const wrapper = mount(Lance)
-        const inputLance =wrapper.find('input')
+        const inputLance = wrapper.find('input')
         inputLance.setValue(200)
         wrapper.trigger('submit')
         const lancesEmitidos = wrapper.emitted('novo-lance')
